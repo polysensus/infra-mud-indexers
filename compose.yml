@@ -1,0 +1,49 @@
+version: "3.8"
+
+# This compose file is setup to index the redstone network state for the biomesaw mud world
+# using anvil as a forked environment.
+# The biomes world address came from this branch, however it seeems to have
+# been deleted
+#   https://github.com/tenetxyz/biomes-contracts/blob/current-deployment/packages/world/worlds.json@1c7b33edb87acc2a00afe6a2ab85c12e4fa8445f
+# Notes:
+#  anvil does not persist state
+
+services:
+
+  anvil:
+    env_file:
+      - ./${PROJECT_DIR}/.env.anvil
+    image: ghcr.io/foundry-rs/foundry:latest
+    platform: linux/arm64
+    volumes:
+      - ./${PROJECT_DIR}/data/anvil:/data
+    entrypoint:
+      - anvil
+      - --compute-units-per-second
+      - "3300"
+      - --cache-path
+      - /data
+      - --fork-url
+      - ${ANVIL_FORK_URL}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8545"
+    ports:
+      - "${ANVIL_PORT}:8545"
+    restart: unless-stopped
+  store-indexer:
+    env_file:
+      - ./${PROJECT_DIR}/.env.store-indexer
+    depends_on:
+      - anvil
+    image: ${STORE_INDEXER_IMAGE_NAME}:${STORE_INDEXER_IMAGE_TAG}
+    platform: linux/arm64
+    volumes:
+      - ./${PROJECT_DIR}/data/store-indexer:/data
+    working_dir: /app/packages/store-indexer
+    command: pnpm start:sqlite
+    ports:
+      - "${STORE_INDEXER_GRAPHQL0}:3000" # Expose GraphQL endpoint
+      - "${STORE_INDEXER_GRAPHQL1}:3001" # Expose GraphQL endpoint
+    restart: unless-stopped

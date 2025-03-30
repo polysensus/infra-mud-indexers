@@ -1,0 +1,31 @@
+version: '3'
+includes:
+  bootstrap:
+    taskfile: ./taskfiles/Taskfile_bootstrap.yml
+  docker:
+    taskfile: ./taskfiles/Taskfile_docker.yml
+  indexers:
+    taskfile: ./taskfiles/Taskfile_indexers.yml
+
+tasks:
+
+  full:
+    desc: "task full c=up|down|logs|ps invokes docker compose {{.c}} for the indexer"
+    vars:
+      c: '{{default "ps" .c}}'
+    cmds:
+      - task: indexers:{{.c}}
+        vars: { DIR: 'indexers/biomesaw-redstone-full' }
+
+  recent:
+    desc: "task recent c=up|down|logs|ps invokes docker compose {{.c}} for the indexer"
+    vars:
+      c: '{{default "ps" .c}}'
+    cmds:
+      - task: indexers:{{.c}}
+        vars: { DIR: 'indexers/biomesaw-redstone-recent' }
+
+  build:
+    desc: Build the store-indexer image
+    cmds:
+      - task: docker:build:store-indexer

@@ -1,0 +1,13 @@
+version: '3'
+vars:
+  STORE_INDEXER_IMAGE: ghcr.io/polysensus/store-indexer
+  STORE_INDEXER_TAG: mud-2.2.14
+  STORE_INDEXER_PLATFORM: linux/arm64
+tasks:
+  default:
+    - task: build:store-indexer
+  build:store-indexer:
+    desc: Build the store-indexer image
+    dir: mud
+    cmds:
+      - docker build --platform {{.STORE_INDEXER_PLATFORM}} --target store-indexer -t {{.STORE_INDEXER_IMAGE}}:{{.STORE_INDEXER_TAG}} .

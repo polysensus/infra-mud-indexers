@@ -1,0 +1,30 @@
+version: '3'
+tasks:
+  up:
+    desc: run docker compose up
+    vars:
+      DIR: '{{.DIR}}'
+    dir: '{{.DIR}}'
+    cmds:
+      - PROJECT_DIR={{.DIR}} docker compose -f ../../compose.yml --env-file=.env up -d
+  down:
+    desc: run docker compose down
+    vars:
+      DIR: '{{.DIR}}'
+    dir: '{{.DIR}}'
+    cmds:
+      - PROJECT_DIR={{.DIR}} docker compose -f ../../compose.yml --env-file=.env down
+  logs:
+    desc: run docker compose logs -f
+    vars:
+      DIR: '{{.DIR}}'
+    dir: '{{.DIR}}'
+    cmds:
+      - PROJECT_DIR={{.DIR}} docker compose -f ../../compose.yml --env-file=.env logs -f
+  ps:
+    desc: run docker compose ps
+    vars:
+      DIR: '{{.DIR}}'
+    dir: '{{.DIR}}'
+    cmds:
+      - PROJECT_DIR={{.DIR}} docker compose -f ../../compose.yml --env-file=.env ps
