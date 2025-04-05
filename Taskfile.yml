@@ -1,29 +1,30 @@
 version: '3'
+
+# expected to define
+#
+#  STORE_INDEXER_IMAGE_NAME: '{{.STORE_INDEXER_IMAGE_NAME }}'
+#  STORE_INDEXER_IMAGE_TAG: '{{.STORE_INDEXER_IMAGE_TAG }}'
+#  STORE_INDEXER_PLATFORM: '{{.STORE_INDEXER_PLATFORM }}'
+
+dotenv: [".env.indexers"]
+
 includes:
   bootstrap:
     taskfile: ./taskfiles/Taskfile_bootstrap.yml
   docker:
     taskfile: ./taskfiles/Taskfile_docker.yml
-  indexers:
-    taskfile: ./taskfiles/Taskfile_indexers.yml
-
-tasks:
 
   full:
-    desc: "task full c=up|down|logs|ps invokes docker compose {{.c}} for the indexer"
+    taskfile: ./taskfiles/Taskfile_indexers.yml
     vars:
-      c: '{{default "ps" .c}}'
-    cmds:
-      - task: indexers:{{.c}}
-        vars: { DIR: 'indexers/biomesaw-redstone-full' }
+      DIR: indexers/biomesaw-redstone-full
 
   recent:
-    desc: "task recent c=up|down|logs|ps invokes docker compose {{.c}} for the indexer"
+    taskfile: ./taskfiles/Taskfile_indexers.yml
     vars:
-      c: '{{default "ps" .c}}'
-    cmds:
-      - task: indexers:{{.c}}
-        vars: { DIR: 'indexers/biomesaw-redstone-recent' }
+      DIR: indexers/biomesaw-redstone-recent
+
+tasks:
 
   build:
     desc: Build the store-indexer image

@@ -1,5 +1,27 @@
 version: '3'
 tasks:
+  help:
+    desc: show significant and effective vars
+    cmds:
+      - | 
+        echo "
+        STORE_INDEXER_IMAGE_NAME: '{{.STORE_INDEXER_IMAGE_NAME }}'
+        STORE_INDEXER_IMAGE_TAG: '{{.STORE_INDEXER_IMAGE_TAG }}'
+        STORE_INDEXER_PLATFORM: '{{.STORE_INDEXER_PLATFORM }}'
+
+        \$STORE_INDEXER_IMAGE_NAME: '${STORE_INDEXER_IMAGE_NAME}'
+        \$STORE_INDEXER_IMAGE_TAG: '${STORE_INDEXER_IMAGE_TAG}'
+        \$STORE_INDEXER_PLATFORM: '${STORE_INDEXER_PLATFORM}'
+        "
+  
+  config:
+    desc: show the effective compose config
+    vars:
+      DIR: '{{.DIR}}'
+    dir: '{{.DIR}}'
+    cmds:
+      - PROJECT_DIR={{.DIR}} STORE_INDEXER_IMAGE={{.STORE_INDEXER_IMAGE}} docker compose -f ../../compose.yml --env-file=.env config
+
   up:
     desc: run docker compose up
     vars:
